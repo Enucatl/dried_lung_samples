@@ -24,7 +24,7 @@ commandline_parser$add_argument('-f', '--file',
             help='file with the data.table')
 args = commandline_parser$parse_args()
 
-table = readRDS(args$f)[v > 0.05][region == "LL"]
+table = readRDS(args$f)[v > 0.05]
 
 print(table)
 
@@ -35,10 +35,10 @@ ratio_histogram = ggplot(table, aes(x=R, fill=smoke)) +
     geom_density(alpha=0.2) +
     scale_x_continuous(limits = c(0, 15))
 
-print(visibility_histogram)
 print(absorption_histogram)
 print(ratio_histogram)
 print(dark_field_histogram)
+print(visibility_histogram)
 
 width = 7
 factor = 1
