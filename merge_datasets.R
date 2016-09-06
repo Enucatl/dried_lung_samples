@@ -16,14 +16,15 @@ args = commandline_parser$parse_args()
 table = fread(args$f)
 print(table)
 
-maketable = function(csv, smoke, region) {
+maketable = function(csv, name, smoke, region) {
     t = fread(csv)
+    t[, name := name]
     t[, smoke := smoke]
     t[, region := region]
     return(t)
 }
 
-pixels = table[, maketable(csv, smoke, region), by=csv]
+pixels = table[, maketable(csv, name, smoke, region), by=csv]
 print(pixels)
 
 saveRDS(pixels, args$o)

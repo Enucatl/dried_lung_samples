@@ -18,34 +18,68 @@ theme_set(theme_bw(base_size=12) + theme(
 ))
 
 commandline_parser = ArgumentParser(
-        description="merge the datasets into one data.table")
+        description="make plots")
 commandline_parser$add_argument('-f', '--file',
             type='character', nargs='?', default='reconstructed.csv',
             help='file with the data.table')
 args = commandline_parser$parse_args()
 
-table = readRDS(args$f)[v > 0.05][region == "LL"]
-
+table = readRDS(args$f)
 print(table)
+aggregated = dcast(
+    table,
+    smoke + name + region ~ .,
+    fun=list(mean, sd, length),
+    value.var=c("A", "B", "R", "v")
+    )
 
-visibility_histogram = ggplot(table, aes(x=v, fill=smoke)) + geom_density(alpha=0.2)
-absorption_histogram = ggplot(table, aes(x=A, fill=smoke)) + geom_density(alpha=0.2)
-dark_field_histogram = ggplot(table, aes(x=B, fill=smoke)) + geom_density(alpha=0.2)
-ratio_histogram = ggplot(table, aes(x=R, fill=smoke)) +
-    geom_density(alpha=0.2) +
-    scale_x_continuous(limits = c(5, 20))
+aggregated[, sample := paste(name, region, smoke, sep="_")]
 
-print(absorption_histogram)
-print(ratio_histogram)
-print(dark_field_histogram)
-print(visibility_histogram)
+print(aggregated)
+
 
 width = 7
 factor = 1
 height = width * factor
-ggsave("plots/visibility.png", visibility_histogram, width=width, height=height, dpi=300)
-ggsave("plots/absorption.png", absorption_histogram, width=width, height=height, dpi=300)
-ggsave("plots/ratio.png", ratio_histogram, width=width, height=height, dpi=300)
-ggsave("plots/darkfield.png", dark_field_histogram, width=width, height=height, dpi=300)
+
+ratio = ggplot(aggregated, aes(x=factor(sample))) +
+    geom_point(aes(y=R_mean_.), size=2) +
+    geom_errorbar(aes(ymax = R_mean_. + R_sd_., ymin = R_mean_. - R_sd_.)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    labs(
+         x="",
+         y="R"
+         )
+absorption = ggplot(aggregated, aes(x=factor(sample))) +
+    geom_point(aes(y=A_mean_.), size=2) +
+    geom_errorbar(aes(ymax = A_mean_. + A_sd_., ymin = A_mean_. - A_sd_.)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    labs(
+         x="",
+         y="transmission"
+         )
+darkfield = ggplot(aggregated, aes(x=factor(sample))) +
+    geom_point(aes(y=B_mean_.), size=2) +
+    geom_errorbar(aes(ymax = B_mean_. + B_sd_., ymin = B_mean_. - B_sd_.)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    labs(
+         x="",
+         y="dark field"
+         )
+visibility = ggplot(aggregated, aes(x=factor(sample))) +
+    geom_point(aes(y=v_mean_.), size=2) +
+    geom_errorbar(aes(ymax = v_mean_. + v_sd_., ymin = v_mean_. - v_sd_.)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    labs(
+         x="",
+         y="flat field visibility"
+         )
+
+print(ratio)
+
+ggsave("plots/visibility.png", visibility, width=width, height=height, dpi=300)
+ggsave("plots/absorption.png", absorption, width=width, height=height, dpi=300)
+ggsave("plots/ratio.png", ratio, width=width, height=height, dpi=300)
+ggsave("plots/darkfield.png", darkfield, width=width, height=height, dpi=300)
 
 invisible(readLines(con="stdin", 1))
