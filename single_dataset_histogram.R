@@ -39,10 +39,11 @@ print(aggregated)
 
 
 width = 7
-factor = 1
-height = width * factor
+aspect.ratio = 1
+height = width * aspect.ratio
 
-ratio = ggplot(aggregated, aes(x=factor(sample))) +
+base = ggplot(aggregated, aes(x=factor(sample, levels=aggregated[order(smoke), sample])))
+ratio = base +
     geom_point(aes(y=R_mean_.), size=2) +
     geom_errorbar(aes(ymax = R_mean_. + R_sd_., ymin = R_mean_. - R_sd_.)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
@@ -50,7 +51,7 @@ ratio = ggplot(aggregated, aes(x=factor(sample))) +
          x="",
          y="R"
          )
-absorption = ggplot(aggregated, aes(x=factor(sample))) +
+absorption = base +
     geom_point(aes(y=A_mean_.), size=2) +
     geom_errorbar(aes(ymax = A_mean_. + A_sd_., ymin = A_mean_. - A_sd_.)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
@@ -58,7 +59,7 @@ absorption = ggplot(aggregated, aes(x=factor(sample))) +
          x="",
          y="transmission"
          )
-darkfield = ggplot(aggregated, aes(x=factor(sample))) +
+darkfield = base +
     geom_point(aes(y=B_mean_.), size=2) +
     geom_errorbar(aes(ymax = B_mean_. + B_sd_., ymin = B_mean_. - B_sd_.)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
@@ -66,7 +67,7 @@ darkfield = ggplot(aggregated, aes(x=factor(sample))) +
          x="",
          y="dark field"
          )
-visibility = ggplot(aggregated, aes(x=factor(sample))) +
+visibility = base +
     geom_point(aes(y=v_mean_.), size=2) +
     geom_errorbar(aes(ymax = v_mean_. + v_sd_., ymin = v_mean_. - v_sd_.)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
