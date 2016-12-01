@@ -29,7 +29,7 @@ print(table)
 aggregated = dcast(
     table,
     smoke + name + region ~ .,
-    fun=list(mean, sd, length),
+    fun=list(median, sd, length),
     value.var=c("A", "B", "R", "v")
     )
 
@@ -44,32 +44,32 @@ height = width * aspect.ratio
 
 base = ggplot(aggregated, aes(x=factor(sample, levels=aggregated[order(smoke), sample])))
 ratio = base +
-    geom_point(aes(y=R_mean_.), size=2) +
-    geom_errorbar(aes(ymax = R_mean_. + R_sd_., ymin = R_mean_. - R_sd_.)) +
+    geom_point(aes(y=R_median_.), size=2) +
+    geom_errorbar(aes(ymax = R_median_. + R_sd_., ymin = R_median_. - R_sd_.)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
     labs(
          x="",
          y="R"
          )
 absorption = base +
-    geom_point(aes(y=A_mean_.), size=2) +
-    geom_errorbar(aes(ymax = A_mean_. + A_sd_., ymin = A_mean_. - A_sd_.)) +
+    geom_point(aes(y=A_median_.), size=2) +
+    geom_errorbar(aes(ymax = A_median_. + A_sd_., ymin = A_median_. - A_sd_.)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
     labs(
          x="",
          y="transmission"
          )
 darkfield = base +
-    geom_point(aes(y=B_mean_.), size=2) +
-    geom_errorbar(aes(ymax = B_mean_. + B_sd_., ymin = B_mean_. - B_sd_.)) +
+    geom_point(aes(y=B_median_.), size=2) +
+    geom_errorbar(aes(ymax = B_median_. + B_sd_., ymin = B_median_. - B_sd_.)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
     labs(
          x="",
          y="dark field"
          )
 visibility = base +
-    geom_point(aes(y=v_mean_.), size=2) +
-    geom_errorbar(aes(ymax = v_mean_. + v_sd_., ymin = v_mean_. - v_sd_.)) +
+    geom_point(aes(y=v_median_.), size=2) +
+    geom_errorbar(aes(ymax = v_median_. + v_sd_., ymin = v_median_. - v_sd_.)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
     labs(
          x="",
