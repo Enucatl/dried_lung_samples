@@ -15,8 +15,8 @@ def main(filename, outputname):
     dataset = h5py.File(filename)["postprocessing/dpc_reconstruction"][
         ..., 0]
     fig, ax = plt.subplots()
-    # limits = [0.7, 1]
-    limits = stats.mstats.mquantiles(dataset, prob=[0.1, 0.9])
+    limits = [0.9, 1]
+    # limits = stats.mstats.mquantiles(dataset, prob=[0.1, 0.9])
     print(limits)
     image = ax.imshow(dataset, interpolation="none", aspect='auto')
     image.set_clim(*limits)
