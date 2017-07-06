@@ -42,7 +42,7 @@ width = 7
 aspect.ratio = 1
 height = width * aspect.ratio
 
-base = ggplot(aggregated, aes(x=factor(sample, levels=aggregated[order(smoke), sample])))
+base = ggplot(aggregated, aes(x=factor(sample, levels=aggregated[order(smoke, region), sample])))
 ratio = base +
     geom_point(aes(y=R_median_.), size=2) +
     geom_errorbar(aes(ymax = R_median_. + R_sd_., ymin = R_median_. - R_sd_.)) +

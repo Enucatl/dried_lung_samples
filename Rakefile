@@ -60,7 +60,7 @@ namespace :reconstruction do
   end
 
   desc "csv with reconstructed datasets"
-  file "reconstructed.csv" => datasets[:reconstructed] do |f|
+  file "reconstructed.csv" => datasets[:reconstructed] + ["datasets.csv"] do |f|
     File.open(f.name, "w") do |file|
       file.write(datasets.to_csv)
     end
@@ -74,7 +74,7 @@ namespace :lung_selection do
   datasets.each do |row|
 
     desc "select the roi for #{row[:reconstructed]}"
-    file row[:roi] => ["lung_selection.py", row[:reconstructed]] do |f|
+    file row[:roi] => ["lung_selection.py", row[:reconstructed], "reconstructed.csv"] do |f|
       sh "python #{f.prerequisites[0]} #{f.prerequisites[1]} #{f.name}"
     end
 
